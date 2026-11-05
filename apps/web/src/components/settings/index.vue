@@ -22,12 +22,10 @@
         <div class="panelContent">
           <transition name="el-fade-in" mode="out-in">
             <keep-alive include="personalization">
-              <userAccount v-if="publicWeb && activePanel.id === 'account'" :request="http" :userName="currentUser?.userName ?? ''" :role="currentUser?.role" @loggedOut="loggedOut" />
               <component
-                v-else
                 :is="activePanel.component"
                 v-bind="
-                  ['account', 'pluginMarket', 'languageModel', 'mediaModel', 'personalization', 'deviceLink'].includes(activePanel.id) ? { visible } : {}
+                  ['languageModel', 'mediaModel', 'personalization', 'deviceLink'].includes(activePanel.id) ? { visible } : {}
                 " />
             </keep-alive>
           </transition>
@@ -40,16 +38,13 @@
 <script setup lang="ts">
 import { translate } from "@toonflow/i18n/vue";
 import { computed, defineAsyncComponent, shallowRef, watch } from "vue";
-import userAccount from "@toonflow/multi-tenant-user-web/account";
 import { hasDesktopUpdate } from "@/stores/desktopUpdate";
 import { multiTenantEnabled } from "@/stores/settings";
 import { currentUser, publicWeb } from "@/stores/multiTenant";
-import http from "@/lib/http";
 import { isMobile } from "@/lib/platform";
 import {
   IconSettings,
   IconPhotoVideo,
-  IconBuildingStore,
   IconInfoCircle,
   IconCode,
   IconPlugConnected,
@@ -57,12 +52,10 @@ import {
   IconSubtitlesAi,
   IconDevices,
   IconNetwork,
-  IconUserCircle,
   IconUsersGroup,
 } from "@tabler/icons-vue";
 
 const allSettingsPanels = [
-  { id: "account", label: "账号与余额", icon: IconUserCircle, component: defineAsyncComponent(() => import("./panels/account/index.vue")) },
   { id: "general", label: "通用设置", icon: IconSettings, component: defineAsyncComponent(() => import("./panels/general/index.vue")) },
   {
     id: "languageModel",
@@ -72,13 +65,6 @@ const allSettingsPanels = [
     component: defineAsyncComponent(() => import("./panels/languageModel/index.vue")),
   },
   { id: "mediaModel", label: "媒体模型", icon: IconPhotoVideo, component: defineAsyncComponent(() => import("./panels/mediaModel/index.vue")) },
-  {
-    id: "pluginMarket",
-    label: "插件市场",
-    icon: IconBuildingStore,
-    groupLabel: "市场",
-    component: defineAsyncComponent(() => import("./panels/pluginMarket/index.vue")),
-  },
   { id: "mcp", label: "MCP", icon: IconPlugConnected, groupLabel: "通讯", component: defineAsyncComponent(() => import("./panels/mcp/index.vue")) },
   { id: "network", label: "网络设置", icon: IconNetwork, component: defineAsyncComponent(() => import("./panels/network/index.vue")) },
   ...(!isMobile
@@ -95,20 +81,17 @@ const allSettingsPanels = [
   { id: "multiTenant", label: "多租户能力", icon: IconUsersGroup, component: defineAsyncComponent(() => import("./panels/multiTenant/developmentNotice.vue")) },
   { id: "about", label: "关于", icon: IconInfoCircle, component: defineAsyncComponent(() => import("./panels/about/index.vue")) },
 ];
-const publicAccountPanel = { ...allSettingsPanels[0]!, get label() { return translate("账号"); } };
 const settingsPanels = computed(() => allSettingsPanels.filter(item => {
-  if (publicWeb.value && currentUser.value?.role === "user") return ["account", "general", "about"].includes(item.id);
-  if (publicWeb.value && ["multiTenant", "deviceLink", "network", "mcp", "developer", "pluginMarket"].includes(item.id)) return false;
+  if (publicWeb.value && currentUser.value?.role === "user") return ["general", "about"].includes(item.id);
+  if (publicWeb.value && ["multiTenant", "deviceLink", "network", "mcp", "developer"].includes(item.id)) return false;
   return !multiTenantEnabled.value || !["languageModel", "mediaModel", "developer"].includes(item.id);
-}).map(item => publicWeb.value && item.id === "account" ? publicAccountPanel : item));
+}));
 const activePanel = shallowRef(settingsPanels.value[0]!);
 const visible = defineModel<boolean>({ default: false });
 
 watch(settingsPanels, panels => {
   activePanel.value = panels.find(item => item.id === activePanel.value.id) ?? panels[0]!;
 });
-
-function loggedOut() { window.location.reload(); }
 
 function openPanel(id: string) {
   const panel = settingsPanels.value.find(item => item.id === id);
