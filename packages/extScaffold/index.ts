@@ -33,7 +33,10 @@ export function createExtConfig(config: ExtMetadata, configUrl: string) {
   const root = fileURLToPath(new URL(".", configUrl));
   const fileName = `${config.id}.umd.js`;
   const outDir = fileURLToPath(new URL("../../build/ext", import.meta.url));
-  const dataDir = fileURLToPath(new URL("../../data/ext", import.meta.url));
+  // ACT: 私有化部署可外置数据目录，未设置时沿用仓库内 data/。
+  const dataDir = process.env.TOONFLOW_DATA_DIR
+    ? resolve(process.env.TOONFLOW_DATA_DIR, "ext")
+    : fileURLToPath(new URL("../../data/ext", import.meta.url));
   let syncToData = process.env.NODE_ENV === "dev";
 
   return defineConfig({

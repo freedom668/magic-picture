@@ -140,7 +140,7 @@ import attachmentList from "@/components/agent/attachmentList.vue";
 import { createPastedTextFile, readTextAttachment } from "@/components/agent/textAttachments";
 import type { AgentAttachment } from "@/components/agent/types";
 import type { HomeAdvertisement, HomeAdvertisements } from "@toonflow/server/channel";
-import logoUrl from "@toonflow/assets/logo.svg";
+import logoUrl from "@toonflow/assets/logo.png";
 import { useWorkspaceStore, type Project } from "@/stores/workspace";
 import { currentUser, publicWeb } from "@/stores/multiTenant";
 import { hasDesktopUpdate } from "@/stores/desktopUpdate";
@@ -687,8 +687,6 @@ async function createProject(fromPrompt = true) {
           width: 30px;
           height: 30px;
           transition: opacity var(--sidebarFade) ease;
-
-          .dark & { filter: invert(1); }
         }
 
         .brandName {
@@ -824,10 +822,6 @@ async function createProject(fromPrompt = true) {
               flex-shrink: 0;
               width: clamp(28px, 3.4vw, 44px);
               height: clamp(28px, 3.4vw, 44px);
-
-              .dark & {
-                filter: invert(1);
-              }
             }
 
             h1 {

@@ -43,7 +43,10 @@ export async function createToolConfig(
   const metadataJson = JSON.stringify(metadata).replaceAll("/", "\\u002f");
   const fileName = `${metadata.name}.tool.js`;
   const outDir = options.outDir ? resolve(root, options.outDir) : fileURLToPath(new URL("../../build/tools", import.meta.url));
-  const dataDir = fileURLToPath(new URL("../../data/tools", import.meta.url));
+  // ACT: 私有化部署可外置数据目录，未设置时沿用仓库内 data/。
+  const dataDir = process.env.TOONFLOW_DATA_DIR
+    ? resolve(process.env.TOONFLOW_DATA_DIR, "tools")
+    : fileURLToPath(new URL("../../data/tools", import.meta.url));
   let clientBanner = "";
   const componentEntries = Object.entries(components ?? {});
   if (componentEntries.length) {

@@ -1,9 +1,9 @@
-import { createApp, h, type App } from "vue";
+﻿import { createApp, h, type App } from "vue";
 import { ElConfigProvider } from "element-plus";
 import { elementLocales } from "@toonflow/i18n/elementPlus";
 import { locale } from "@toonflow/i18n/vue";
 import type { UserSession } from "@toonflow/multi-tenant-user-web/types";
-import logoUrl from "@toonflow/assets/logo.svg";
+import logoUrl from "@toonflow/assets/logo.png";
 import http from "@/lib/http";
 import { actualPlatform } from "@/lib/platform";
 import { currentUser, publicWeb, hostWeb } from "@/stores/multiTenant";

@@ -53,7 +53,10 @@ export function createNodeConfig(config: NodeConfig, configUrl: string, options:
   if (!/^[a-z][a-zA-Z0-9]*$/.test(nodeName)) throw new Error(`节点名必须使用小驼峰：${nodeName}`);
   const fileName = `${nodeName}.umd.js`;
   const outDir = options.outDir ? resolve(root, options.outDir) : fileURLToPath(new URL("../../build/nodes", import.meta.url));
-  const dataDir = fileURLToPath(new URL("../../data/nodes", import.meta.url));
+  // ACT: 私有化部署可外置数据目录，未设置时沿用仓库内 data/。
+  const dataDir = process.env.TOONFLOW_DATA_DIR
+    ? resolve(process.env.TOONFLOW_DATA_DIR, "nodes")
+    : fileURLToPath(new URL("../../data/nodes", import.meta.url));
   let syncToData = options.syncToData ?? process.env.NODE_ENV === "dev";
 
   return defineConfig({

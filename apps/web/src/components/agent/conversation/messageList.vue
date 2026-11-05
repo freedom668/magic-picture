@@ -5,7 +5,7 @@
         <template #content>
           <section class="welcomeMessage" aria-label="开始新对话">
             <div class="welcomeHeader">
-              <span class="welcomeIcon" aria-hidden="true"><span class="welcomeLogo" :style="{ maskImage: `url(${logoUrl})` }" /></span>
+              <span class="welcomeIcon" aria-hidden="true"><img class="welcomeLogo" :src="logoUrl" alt="" /></span>
               <div>
                 <p class="welcomeLabel">你好，我是 Toonflow 助手</p>
                 <h3>从一个想法开始</h3>
@@ -87,7 +87,7 @@
 import { computed, nextTick, onUpdated, ref, watch, type ComponentPublicInstance } from "vue";
 import { defaultRangeExtractor, observeElementRect, useVirtualizer } from "@tanstack/vue-virtual";
 import { IconArrowDown, IconArrowFork, IconArrowUpRight, IconAtom, IconChevronDown, IconChevronRight, IconCopy, IconCornerDownRight, IconMovie, IconPencil, IconPhoto, IconTrash, IconUsersGroup, IconVector, IconX } from "@tabler/icons-vue";
-import logoUrl from "@toonflow/assets/logo.svg";
+import logoUrl from "@toonflow/assets/logo.png";
 import browserPanel from "@toonflow/tool-browser/panel";
 import { isBrowserTool } from "@toonflow/tool-browser/client";
 import type { AgentToolCall } from "@toonflow/server/agent/types";
@@ -263,10 +263,7 @@ const welcomeSuggestions = [
           .welcomeLogo {
             width: 28px;
             height: 28px;
-            background: currentColor;
-            mask-size: contain;
-            mask-position: center;
-            mask-repeat: no-repeat;
+            object-fit: contain;
           }
         }
 

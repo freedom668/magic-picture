@@ -66,7 +66,9 @@ try {
   if (tool.length >= 10_000_000) throw new Error(`工具文件 ${tool.length} 字节，必须小于 10 MB（含 ZIP 编码和文档）`);
   await writeAtomic(join(output, name), tool);
   if (process.env.NODE_ENV === "dev") {
-    const dataDirectory = resolve(root, "../../../data/tools");
+    const dataDirectory = process.env.TOONFLOW_DATA_DIR
+      ? resolve(process.env.TOONFLOW_DATA_DIR, "tools")
+      : resolve(root, "../../../data/tools");
     await mkdir(dataDirectory, { recursive: true });
     await copyFile(join(output, name), join(dataDirectory, name));
   }

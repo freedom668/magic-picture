@@ -1,10 +1,10 @@
-<template>
+﻿<template>
   <canvas ref="fogCanvas" class="pixelFog" aria-hidden="true" />
 </template>
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
-import logoUrl from "@toonflow/assets/logo.svg";
+import logoUrl from "@toonflow/assets/logo.png";
 
 type FogPoint = { x: number; y: number; nx: number; ny: number; ink: number; halo: number; variation: number; pixelIndex: number };
 type LogoMask = { pixels: Uint8ClampedArray; halo: Uint8ClampedArray };
@@ -63,6 +63,14 @@ function sampleLogo(): LogoMask | undefined {
     (right - left + 1) / maskSize * image.naturalWidth, (bottom - top + 1) / maskSize * image.naturalHeight,
     (maskSize - logoWidth) / 2, (maskSize - logoHeight) / 2, logoWidth, logoHeight);
   pixels = maskContext.getImageData(0, 0, maskSize, maskSize).data;
+  // 位图标志是实心色块，若直接用 alpha 会在页面上压出一个实心圆；改按暗部强度取墨迹，保留线稿式雾效。
+  for (let i = 0; i < pixels.length; i += 4) {
+    const sourceAlpha = pixels[i + 3]!;
+    if (!sourceAlpha) continue;
+    const luminance = (pixels[i]! * 0.299 + pixels[i + 1]! * 0.587 + pixels[i + 2]! * 0.114) / 255;
+    pixels[i + 3] = sourceAlpha * (1 - luminance) ** 1.35;
+  }
+  maskContext.putImageData(new ImageData(pixels, maskSize, maskSize), 0, 0);
   const blurred = document.createElement("canvas");
   blurred.width = blurred.height = maskSize;
   const blurredContext = blurred.getContext("2d");

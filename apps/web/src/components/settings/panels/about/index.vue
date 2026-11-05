@@ -234,7 +234,7 @@ import {
   IconBrandWechat,
   IconQrcode,
 } from "@tabler/icons-vue";
-import logoUrl from "@toonflow/assets/logo.svg";
+import logoUrl from "@toonflow/assets/logo.png";
 import type { Sponsor } from "@toonflow/server/channel";
 import http from "@/lib/http";
 import { saveSettings } from "@/stores/settings";
@@ -405,10 +405,6 @@ async function runUpdate(nextAction: "read" | "check" | "download" | "apply") {
         width: 42px;
         height: 42px;
         object-fit: contain;
-
-        .dark & {
-          filter: invert(1);
-        }
       }
     }
 

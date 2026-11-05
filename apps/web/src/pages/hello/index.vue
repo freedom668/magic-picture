@@ -43,7 +43,7 @@
     <div class="artPanel" aria-hidden="true">
       <bg class="artBg" />
       <div class="artBrand">
-        <span class="artLogo" v-html="logoSvg" />
+        <img class="artLogo" :src="logoUrl" alt="" />
         <span class="artName">{{ translate("Toonflow") }}</span>
       </div>
     </div>
@@ -59,7 +59,7 @@ import { IconArrowLeft, IconDevices } from "@tabler/icons-vue";
 import { customProviders, multiTenantEnabled, toonflowAccountToken } from "@/stores/settings";
 import { useHelloStore } from "@/stores/hello";
 import anonymousData from "@/lib/anonymousData";
-import logoSvg from "@toonflow/assets/logo.svg?raw";
+import logoUrl from "@toonflow/assets/logo.png";
 import bg from "./bg.vue";
 import languageSelect from "@/components/languageSelect.vue";
 import { mobileConnectionLabel } from "@/lib/mobile";
@@ -285,19 +285,11 @@ async function completeSetup() {
       color: #fff;
 
       .artLogo {
+        display: block;
         width: 44px;
         height: 44px;
-        line-height: 0;
-
-        :deep(svg) {
-          display: block;
-          width: 100%;
-          height: 100%;
-        }
-
-        :deep(path) {
-          fill: #fff;
-        }
+        object-fit: contain;
+        filter: drop-shadow(0 2px 10px rgb(0 0 0 / 28%));
       }
 
       .artName {

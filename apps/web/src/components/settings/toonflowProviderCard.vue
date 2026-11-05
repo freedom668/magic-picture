@@ -55,7 +55,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, ref } from "vue";
 import { IconCircleCheck, IconEye } from "@tabler/icons-vue";
-import logoUrl from "@toonflow/assets/logo.svg";
+import logoUrl from "@toonflow/assets/logo.png";
 import { toonflowAccountToken } from "@/stores/settings";
 
 const props = defineProps<{ scope: "text" | "media"; provider?: { models: unknown[]; loadError?: string } }>();
@@ -90,8 +90,6 @@ const providerLoaded = computed(() => !!toonflowAccountToken.value && !!props.pr
         width: 42px;
         height: 42px;
         object-fit: contain;
-
-        .dark & { filter: invert(1); }
       }
     }
 
@@ -226,8 +224,6 @@ const providerLoaded = computed(() => !!toonflowAccountToken.value && !!props.pr
       width: 40px;
       height: 40px;
       object-fit: contain;
-
-      .dark & { filter: invert(1); }
     }
 
     .catalogTitle {
