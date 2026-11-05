@@ -31,9 +31,9 @@
       </el-card>
     </div>
     <div class="providerActions">
-      <el-button class="addButton" :icon="IconPlus" @click="openAdd('builtin')">添加供应商</el-button>
-      <el-button class="addButton" :icon="IconSettings" @click="openAdd('custom')">添加自定义供应商</el-button>
+      <el-button class="addButton" :icon="IconPlus" @click="addDialogVisible = true">添加媒体模型</el-button>
     </div>
+    <addMediaModelDialog v-model="addDialogVisible" @added="saveProviderItem" />
     <component :is="mediaProviderDialog" v-model="providerDialogVisible" :mode="addMode" :provider="editingSourceProvider" @added="saveProviderItem" @saved="saveProviderItem" />
     <component :is="editProviderDialog" v-model="editorVisible" :provider="editingProvider" @saved="saveProviderItem" />
   </div>
@@ -44,16 +44,18 @@ import { translate } from "@toonflow/i18n/vue";
 import axios from "axios";
 import { computed, defineAsyncComponent, onMounted, onBeforeUnmount, ref, shallowRef, type Component } from "vue";
 import { ElMessage } from "element-plus";
-import { IconPlus, IconSettings, IconEdit, IconTrash, IconDownload, IconCode } from "@tabler/icons-vue";
+import { IconPlus, IconEdit, IconTrash, IconDownload, IconCode } from "@tabler/icons-vue";
 import type { MediaProvider } from "@toonflow/provider-web/types";
 import { saveSettings } from "@/stores/settings";
 import { invalidateNodeModels } from "@toonflow/nodes-scaffold/nodeAi";
+import addMediaModelDialog from "./addMediaModelDialog.vue";
 
 defineProps<{ visible?: boolean }>();
 const mediaProviderDialog = shallowRef<Component>();
 const editProviderDialog = shallowRef<Component>();
 const providers = ref<MediaProvider[]>([]);
 const visibleProviders = computed(() => providers.value);
+const addDialogVisible = ref(false);
 const providerDialogVisible = ref(false);
 const editorVisible = ref(false);
 const addMode = ref<"builtin" | "custom">("builtin");
